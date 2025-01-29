@@ -1,0 +1,8 @@
+{
+  "name": "advent-of-code-2024",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Lewis Barnes",
+  "license": "MIT",
+  "private": true
+}
