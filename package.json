@@ -4,5 +4,9 @@
   "main": "index.js",
   "author": "Lewis Barnes",
   "license": "MIT",
-  "private": true
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@types/node": "22.12.0"
+  }
 }
