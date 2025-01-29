@@ -17,7 +17,7 @@ const parseInput = (): Tuple<Array<number>> => {
 
       return res;
     }, [[], []]);
-}
+};
 
 const getPairs = (lists: Tuple<Array<number>>): Array<Tuple<number>> => {
   const [leftList, rightList] = lists.map((list) => list.toSorted());
@@ -25,15 +25,26 @@ const getPairs = (lists: Tuple<Array<number>>): Array<Tuple<number>> => {
   return leftList.map((leftNum, index) => {
     return [leftNum, rightList[index]]
   });
-}
+};
 
 const calculatePartOne = () => {
   const lists = parseInput();
   const pairs = getPairs(lists);
 
-  return pairs.reduce((result, [leftNum, rightNum]) => {
-    return result + Math.abs(leftNum - rightNum);
+  return pairs.reduce((res, [leftNum, rightNum]) => {
+    return res + Math.abs(leftNum - rightNum);
   }, 0);
-}
+};
+
+const calculatePartTwo = () => {
+  const [leftList, rightList] = parseInput();
+
+  return leftList.reduce((res, leftNum) => {
+    const matches = rightList.filter((x) => x === leftNum).length;
+
+    return res + (leftNum * matches);
+  }, 0);
+};
 
 console.log("Part One:", calculatePartOne());
+console.log("Part Two:", calculatePartTwo());
