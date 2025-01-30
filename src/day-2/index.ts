@@ -52,4 +52,26 @@ const calculatePartOne = () => {
   return safeReports.length;
 };
 
+const calculatePartTwo = () => {
+  const reports = parseInput();
+  const safeReports = reports.filter((report) => {
+    // Create a list of combinations that remove a single level
+    // to be tested (along with the original report).
+    const combinations = [
+      report,
+      ...report.map((level, index) => {
+        return [
+          ...report.slice(0, index),
+          ...report.slice(index + 1),
+        ];
+      })
+    ];
+
+    return combinations.some(isReportSafe);
+  });
+
+  return safeReports.length;
+};
+
 console.log("Part One:", calculatePartOne());
+console.log("Part Two:", calculatePartTwo());
