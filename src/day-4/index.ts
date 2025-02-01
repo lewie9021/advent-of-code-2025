@@ -70,8 +70,38 @@ const calculatePartOne = () => {
   return result.length;
 };
 
+const isXmas = (
+  grid: Array<Array<string>>,
+  position: Tuple<number>
+) => {
+  const [y, x] = position;
+  const topLeft = grid[y - 1]?.[x - 1];
+  const topRight = grid[y - 1]?.[x + 1];
+  const bottomLeft = grid[y + 1]?.[x - 1];
+  const bottomRight = grid[y + 1]?.[x + 1];
+
+  return [
+    grid[y][x] === "A",
+    (topLeft === "M" && bottomRight === "S") || (topLeft === "S" && bottomRight === "M"),
+    (topRight === "M" && bottomLeft === "S") || (topRight === "S" && bottomLeft === "M")
+  ].every((x) => x);
+}
+
 const calculatePartTwo = () => {
-  return null;
+  const grid = parseInput();
+  let result = 0;
+
+  for (let y = 0; y < grid.length; y += 1) {
+    for (let x = 0; x < grid[y].length; x += 1) {
+      const position: Tuple<number> = [y, x];
+
+      if (isXmas(grid, position)) {
+        result += 1;
+      }
+    }
+  }
+
+  return result;
 };
 
 console.log("Part One:", calculatePartOne());
