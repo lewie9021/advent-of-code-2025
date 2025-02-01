@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "day-1": "node --experimental-transform-types src/day-1/index.ts",
-    "day-2": "node --experimental-transform-types src/day-2/index.ts"
+    "day-2": "node --experimental-transform-types src/day-2/index.ts",
+    "day-3": "node --experimental-transform-types src/day-3/index.ts"
   },
   "dependencies": {
     "@types/node": "22.12.0"
