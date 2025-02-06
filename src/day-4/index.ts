@@ -85,7 +85,7 @@ const isXmas = (
     (topLeft === "M" && bottomRight === "S") || (topLeft === "S" && bottomRight === "M"),
     (topRight === "M" && bottomLeft === "S") || (topRight === "S" && bottomLeft === "M")
   ].every((x) => x);
-}
+};
 
 const calculatePartTwo = () => {
   const grid = parseInput();
