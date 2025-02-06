@@ -59,7 +59,18 @@ const calculatePartOne = () => {
 };
 
 const calculatePartTwo = () => {
-  return null
+  const { rules, updates } = parseInput();
+
+  return updates.reduce((res, update) => {
+    const sorted = getCorrectOrder(update, rules);
+
+    if (update.every((x, i) => x === sorted[i])) {
+      return res;
+    }
+
+    const middleIndex = Math.ceil(sorted.length / 2) - 1
+    return res + sorted[middleIndex];
+  }, 0);
 };
 
 console.log("Part One:", calculatePartOne());
