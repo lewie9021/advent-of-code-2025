@@ -65,6 +65,45 @@ const getAntinodeLocations = (grid: Array<Array<string>>, combination: Tuple<Tup
     .filter(([x, y]) => y >= 0 && x >= 0 && y < grid.length && x < grid[y].length);
 };
 
+const getAntinodeLocationsV2 = (grid: Array<Array<string>>, combination: Tuple<Tuple<number>>) => {
+  const [[aY, aX], [bY, bX]] = combination;
+  const diffY = aY - bY;
+  const diffX = aX - bX;
+  const locations: Array<Tuple<number>> = [];
+
+  for (let i = 0; ; i += 1) {
+    const nextAY = aY + (diffY * i);
+    const nextAX = aX + (diffX * i);
+
+    if (nextAY < 0 || nextAY > grid.length - 1) {
+      break;
+    }
+
+    if (nextAX < 0 || nextAX > grid[nextAY].length - 1) {
+      break;
+    }
+
+    locations.push([nextAY, nextAX]);
+  }
+
+  for (let i = 0; ; i += 1) {
+    const nextBY = bY - (diffY * i);
+    const nextBX = bX - (diffX * i);
+
+    if (nextBY < 0 || nextBY > grid.length - 1) {
+      break;
+    }
+
+    if (nextBX < 0 || nextBX > grid[nextBY].length - 1) {
+      break;
+    }
+
+    locations.push([nextBY, nextBX]);
+  }
+
+  return locations;
+};
+
 const calculatePartOne = () => {
   const grid = parseInput();
   const locationsByAntenna = getLocationsByAntenna(grid);
@@ -83,7 +122,20 @@ const calculatePartOne = () => {
 };
 
 const calculatePartTwo = () => {
-  return null;
+  const grid = parseInput();
+  const locationsByAntenna = getLocationsByAntenna(grid);
+  let result: Array<Tuple<number>> = [];
+
+  for (const key in locationsByAntenna) {
+    const locations = locationsByAntenna[key];
+    const combinations = getAntennaCombinations(locations);
+
+    for (let i = 0; i < combinations.length; i += 1) {
+      result.push(...getAntinodeLocationsV2(grid, combinations[i]));
+    }
+  }
+
+  return uniqWith(result, isEqual).length;
 };
 
 console.log("Part One:", calculatePartOne());
