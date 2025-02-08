@@ -72,6 +72,69 @@ const compactDiskMap = (diskMap: Array<number>) => {
   return result;
 };
 
+const getLastChunk = (diskMap: Array<number>, lastId = Infinity) => {
+  let chunk: Array<number> = [];
+  let index = -1;
+
+  for (let i = diskMap.length - 1; i >= 0; i -= 1) {
+    const value = diskMap[i];
+
+    if (chunk.length && value !== chunk[0]) {
+      break;
+    }
+
+    if (value < lastId) {
+      index = i;
+      chunk.push(value);
+    }
+  }
+
+  return {
+    index,
+    value: chunk,
+    size: chunk.length,
+  };
+}
+
+const findEmptySpace = (diskMap: Array<number>, size: number) => {
+  for (let i = 0; i < diskMap.length; i += 1) {
+    const value = diskMap[i];
+
+    if (!isNaN(value)) {
+      continue;
+    }
+
+    if (diskMap.slice(i, i + size).every(isNaN)) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+const compactDiskMapV2 = (diskMap: Array<number>) => {
+  let lastId = Infinity;
+  let nextDiskMap = cloneDeep(diskMap);
+
+  while (lastId > 0) {
+    const lastChunk = getLastChunk(nextDiskMap, lastId);
+    const emptySpaceIndex = findEmptySpace(nextDiskMap, lastChunk.size);
+
+    lastId = lastChunk.value[0];
+
+    if (emptySpaceIndex === -1 || emptySpaceIndex > lastChunk.index) {
+      continue;
+    }
+
+    for (let i = 0; i < lastChunk.size; i += 1) {
+      nextDiskMap[emptySpaceIndex + i] = lastChunk.value[i];
+      nextDiskMap[lastChunk.index + i] = NaN;
+    }
+  }
+
+  return nextDiskMap;
+};
+
 const calculateChecksum = (diskMap: Array<number>) => {
   return diskMap.reduce((res, x, i) => {
     if (isNaN(x)) {
@@ -89,7 +152,9 @@ const calculatePartOne = () => {
 };
 
 const calculatePartTwo = () => {
-  return null;
+  const diskMap = parseInput();
+
+  return calculateChecksum(compactDiskMapV2(explodeDiskMap(diskMap)));
 };
 
 console.log("Part One:", calculatePartOne());
