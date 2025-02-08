@@ -15,6 +15,7 @@
     "day-6": "node --experimental-transform-types src/day-6/index.ts",
     "day-7": "node --experimental-transform-types src/day-7/index.ts",
     "day-8": "node --experimental-transform-types src/day-8/index.ts"
+    "day-9": "node --experimental-transform-types src/day-9/index.ts"
   },
   "dependencies": {
     "@types/node": "22.12.0",
