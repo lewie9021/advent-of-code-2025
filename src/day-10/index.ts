@@ -84,7 +84,15 @@ const calculatePartOne = () => {
 };
 
 const calculatePartTwo = () => {
-  return null;
+  const map = parseInput();
+
+  return findTrailheads(map)
+    .map((trailhead) => {
+      return walkTrail(map, [trailhead])
+        .map((trail) => last(trail))
+        .length;
+    })
+    .reduce((total, score) => total + score, 0);
 };
 
 console.log("Part One:", calculatePartOne());
