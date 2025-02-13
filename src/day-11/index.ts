@@ -49,46 +49,43 @@ const cache: Record<string, number> = {};
 
 const getCacheKey = (stone: number, blinks: number) => [stone, blinks].join("|");
 
-const blinkV2 = (stones: Array<number>, blinks: number) => {
-  if (blinks < 1) {
-    return stones.length;
+const resolveStone = (stone: number) => {
+  if (stone === 0) {
+    return [1];
   }
 
-  return stones.reduce((total, stone) => {
-    const cacheResult = cache[getCacheKey(stone, blinks)];
+  const digits = getDigits(stone);
 
-    if (typeof cacheResult !== "undefined") {
-      return total + cacheResult;
-    }
+  if (digits.length % 2 === 0) {
+    const middle = digits.length / 2;
 
-    if (stone === 0) {
-      const result = blinkV2([1], blinks - 1);
-      cache[getCacheKey(1, blinks - 1)] = result;
+    return [
+      parseInt(digits.slice(0, middle).join("")),
+      parseInt(digits.slice(middle).join(""))
+    ];
+  }
 
-      return total + result;
-    }
+  return [stone * 2024];
+};
 
-    const digits = getDigits(stone);
+const blinkV2 = (stone: number, blinks: number) => {
+  if (blinks < 1) {
+    return 1;
+  }
 
-    if (digits.length % 2 === 0) {
-      const middle = digits.length / 2;
-      const leftDigits = parseInt(digits.slice(0, middle).join(""));
-      const rightDigits = parseInt(digits.slice(middle).join(""));
-      const leftResult = blinkV2([leftDigits], blinks - 1);
-      const rightResult = blinkV2([rightDigits], blinks - 1);
-      const result = leftResult + rightResult;
+  const cacheResult = cache[getCacheKey(stone, blinks)];
 
-      cache[getCacheKey(leftDigits, blinks - 1)] = leftResult;
-      cache[getCacheKey(rightDigits, blinks - 1)] = rightResult;
+  if (typeof cacheResult !== "undefined") {
+    return cacheResult;
+  }
 
-      return total + result;
-    }
+  return resolveStone(stone)
+    .reduce((total, value) => {
+      const count = blinkV2(value, blinks - 1);
+      cache[getCacheKey(value, blinks - 1)] = count;
 
-    const result = blinkV2([stone * 2024], blinks - 1);
-    cache[getCacheKey(stone * 2024, blinks - 1)] = result;
-
-    return total + result;
-  }, 0);
+      return total + count;
+    }, 0);
 };
 
 const calculatePartOne = () => {
@@ -103,8 +100,13 @@ const calculatePartOne = () => {
 
 const calculatePartTwo = () => {
   const stones = parseInput();
+  let total = 0;
 
-  return blinkV2(stones, 75);
+  for (let i = 0; i < stones.length; i += 1) {
+    total += blinkV2(stones[i], 75);
+  }
+
+  return total;
 };
 
 console.log("Part One:", calculatePartOne());
